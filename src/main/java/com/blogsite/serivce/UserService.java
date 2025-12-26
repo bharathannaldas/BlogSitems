@@ -25,9 +25,9 @@ public class UserService {
             User user = new User();
             user.setUsername(request.getUsername());
             user.setPassword(request.getPassword());   // 👈 hashed password stored
-            user.setRole(request.getRole());
+            user.setEmail(request.getEmail());
             User savedUser = userRepository.save(user);
-            return new UserDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getPassword(),savedUser.getRole());
+            return new UserDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getPassword(),savedUser.getEmail());
         } catch (Exception ex) {
             //logger.error("Error occurred while registering user: {}", user.getUsername(), ex);
             throw new RuntimeException("Error registering the user");

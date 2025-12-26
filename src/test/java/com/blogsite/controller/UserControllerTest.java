@@ -35,10 +35,10 @@ class UserControllerTest {
     void register_success() throws Exception {
         User user = new User();
         user.setUsername("testUser");
-        user.setRole("USER");
+        user.setEmail("USER@gmail.com");
 
         // Create a UserDTO for expected output
-        UserDTO userDTO = new UserDTO(1L, "testUser", "USER","USER");
+        UserDTO userDTO = new UserDTO(1L, "testUser", "USER","USER@gmail.com");
 
         // Mock the service layer
         when(userService.register(any(UserDTO.class))).thenReturn(userDTO);

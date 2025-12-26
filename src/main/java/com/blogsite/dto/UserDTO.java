@@ -1,5 +1,6 @@
 package com.blogsite.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -10,8 +11,9 @@ public class UserDTO {
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
-    @NotBlank(message = "Role cannot be blank")
-    private String role;
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email should be valid and contain '@' and '.com'")
+    private String email;
 
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -20,10 +22,10 @@ public class UserDTO {
     // Constructors, Getters, and Setters
     public UserDTO() {}
 
-    public UserDTO(Long id, String username, String password,String role) {
+    public UserDTO(Long id, String username, String password,String email) {
         this.id = id;
         this.username = username;
-        this.role = role;
+        this.email = email;
         this.password = password;
     }
 
@@ -43,12 +45,12 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

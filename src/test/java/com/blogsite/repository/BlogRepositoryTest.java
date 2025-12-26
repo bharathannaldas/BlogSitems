@@ -38,7 +38,7 @@ public class BlogRepositoryTest {
         user = new User();
         user.setUsername("author1");
         user.setPassword("author123");
-        user.setRole("AUTHOR");
+        user.setEmail("AUTHOR@gmail.com");
 
         // Create a Blog object and associate it with the user
         blog = new Blog();

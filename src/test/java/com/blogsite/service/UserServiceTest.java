@@ -38,7 +38,7 @@ class UserServiceTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("testUser");
         userDTO.setPassword("password123");
-        userDTO.setRole("USER");
+        userDTO.setEmail("USER@gmail.com");
 
         // Print to verify initialization
         System.out.println("UserDTO before passing to service: " + userDTO.getUsername());
@@ -48,7 +48,7 @@ class UserServiceTest {
         savedUser.setId(1L);
         savedUser.setUsername(userDTO.getUsername());
         savedUser.setPassword("encodedPassword");  // Simulate encoded password
-        savedUser.setRole(userDTO.getRole());
+        savedUser.setEmail(userDTO.getEmail());
 
         // Mock the save method to return the savedUser
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
@@ -62,7 +62,7 @@ class UserServiceTest {
         // Assert: Verify the returned UserDTO matches the expected values
         assertNotNull(registeredUser);
         assertEquals("testUser", registeredUser.getUsername());
-        assertEquals("USER", registeredUser.getRole());
+        assertEquals("USER@gmail.com", registeredUser.getEmail());
         assertEquals(1L, registeredUser.getId());
     }
 

@@ -19,7 +19,7 @@ public class User {
     private String password;
 
     @NotBlank
-    private String role;
+    private String email;
 
     // getters & setters
 
@@ -47,12 +47,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 
