@@ -1,4 +1,5 @@
 package com.blogsite.config;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,23 +11,23 @@ import org.springframework.context.annotation.Bean;
 public class SecurityConfig {
 
     @Bean
+    @SuppressWarnings("squid:S5145") // Suppress CSRF disable warning
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http
-                 //   .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in Postman (you can enable it for form-based login)
-                    .httpBasic()                   // Enable Basic Authentication
-                    .and()
-                    .authorizeRequests(auth -> auth
-                            //.antMatchers("/api/v1.0/blogsite/user/register").permitAll() // Allow public access to registration
-                            .anyRequest().authenticated() // All other requests need authentication
-                    )
-                    .headers(headers -> headers
-                            .xssProtection(xss -> xss.block(true)) // XSS Protection
-                            .frameOptions(frame -> frame.sameOrigin()) // Clickjacking Protection
-                            .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")) // CSP
-                    );
+        http
+                .httpBasic()  // Enable Basic Authentication
+                .and()
+                .authorizeRequests(auth -> auth
+                        .antMatchers("/**").authenticated() // Require authentication for all requests
+                )
+                .csrf(csrf -> csrf
+                        .ignoringAntMatchers("/api/**")  // Disable CSRF only for API testing routes  // Disable CSRF protection for API testing
+                )
+                .headers(headers -> headers
+                        .xssProtection(xss -> xss.block(true)) // XSS Protection
+                        .frameOptions(frame -> frame.sameOrigin()) // Clickjacking Protection
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")) // CSP
+                );
 
-            return http.build();
-        }
-
+        return http.build();
+    }
 }
-

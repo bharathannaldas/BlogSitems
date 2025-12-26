@@ -27,14 +27,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    public UserDTO(Long id, String username, String role) {
-        this.id = id;
-        this.username = username;
-        this.role = role;
-
-    }
-
-
     public Long getId() {
         return id;
     }

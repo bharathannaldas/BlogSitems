@@ -2,7 +2,8 @@ package com.blogsite.serivce;
 
 import com.blogsite.dto.BlogDTO;
 import com.blogsite.dto.BlogResponse;
-import com.blogsite.exception.BlogNotFoundException;  // Import custom exception
+import com.blogsite.exception.BlogNotFoundException;
+import com.blogsite.exception.BlogServiceException;
 import com.blogsite.model.Blog;
 import com.blogsite.model.User;
 import com.blogsite.repository.BlogRepository;
@@ -43,7 +44,7 @@ public class BlogService {
             return repo.save(blog);
         } catch (Exception ex) {
             logger.error("Error adding blog with title: {}", blogRequest.getTitle(), ex);
-            throw new RuntimeException("Error adding the blog.");
+            throw new BlogServiceException("Error adding the blog.");
         }
     }
 
@@ -54,7 +55,7 @@ public class BlogService {
             return repo.findByCategory(category);
         } catch (Exception ex) {
             logger.error("Error fetching blogs by category: {}", category, ex);
-            throw new RuntimeException("Error fetching blogs by category.");
+            throw new BlogServiceException("Error fetching blogs by category.");
         }
     }
 
@@ -65,7 +66,7 @@ public class BlogService {
             return repo.findByUserId(userId);
         } catch (Exception ex) {
             logger.error("Error fetching blogs by user: {}", userId, ex);
-            throw new RuntimeException("Error fetching blogs by user.");
+            throw new BlogServiceException("Error fetching blogs by user.");
         }
     }
 
@@ -76,52 +77,47 @@ public class BlogService {
             return repo.findAll();
         } catch (Exception ex) {
             logger.error("Error fetching all blogs", ex);
-            throw new RuntimeException("Error fetching all blogs.");
+            throw new BlogServiceException("Error fetching all blogs.");
         }
     }
 
     // DELETE (SAFE)
+    @Transactional
     public void deleteByName(String blogName) {
         if (blogName == null) {
             throw new IllegalArgumentException("Blog title cannot be null");
         }
-
         try {
             logger.warn("Attempting to delete blog with title: {}", blogName);
-
             // Assuming the method repo.deleteByTitle throws BlogNotFoundException if no blog is found
             repo.deleteByTitle(blogName);
-
             logger.info("Successfully deleted blog with title: {}", blogName);
         } catch (BlogNotFoundException ex) {
             logger.error("Blog not found during delete operation: {}", blogName, ex);
             throw new BlogNotFoundException("Blog not found with title: " + blogName);  // Update exception message
         } catch (Exception ex) {
             logger.error("Error deleting blog with title: {}", blogName, ex);
-            throw new RuntimeException("Error deleting the blog.");
+            throw new BlogServiceException("Error deleting the blog.");
         }
     }
-
-
 
     // UPDATE (SAFE)
-    @Transactional
-    public Blog updateBlog(Long blogId, String content, String category) {
-        try {
-            logger.info("Updating blog with ID: {}. New content: {}, New category: {}", blogId, content, category);
-            Blog blog = repo.findById(blogId)
-                    .orElseThrow(() -> new BlogNotFoundException("Blog not found with ID: " + blogId));
-            blog.setContent(content);
-            blog.setCategory(category);
-            return repo.save(blog);
-        } catch (BlogNotFoundException ex) {
-            logger.error("Blog not found for update: {}", blogId, ex);
-            throw ex; // Rethrow the exception to be handled by @ControllerAdvice
-        } catch (Exception ex) {
-            logger.error("Error updating blog with ID: {}", blogId, ex);
-            throw new RuntimeException("Error updating the blog.");
-        }
-    }
+//    public Blog updateBlog(Long blogId, String content, String category) {
+//        try {
+//            logger.info("Updating blog with ID: {}. New content: {}, New category: {}", blogId, content, category);
+//            Blog blog = repo.findById(blogId)
+//                    .orElseThrow(() -> new BlogNotFoundException("Blog not found with ID: " + blogId));
+//            blog.setContent(content);
+//            blog.setCategory(category);
+//            return repo.save(blog);
+//        } catch (BlogNotFoundException ex) {
+//            logger.error("Blog not found for update: {}", blogId, ex);
+//            throw ex; // Rethrow the exception to be handled by @ControllerAdvice
+//        } catch (Exception ex) {
+//            logger.error("Error updating blog with ID: {}", blogId, ex);
+//            throw new RuntimeException("Error updating the blog.");
+//        }
+//    }
 
     // SELECT WITH BUILDER PATTERN (WITH DATE RANGE)
     public List<BlogResponse> getBlogsByCategoryAndDuration(
@@ -145,7 +141,7 @@ public class BlogService {
                     .collect(Collectors.toList());
         } catch (Exception ex) {
             logger.error("Error fetching blogs by category and duration: {} to {}", from, to, ex);
-            throw new RuntimeException("Error fetching blogs by category and duration.");
+            throw new BlogServiceException("Error fetching blogs by category and duration.");
         }
     }
 }
